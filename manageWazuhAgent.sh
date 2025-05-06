@@ -48,6 +48,8 @@ function installPackageDPKG()
 
         echo "Setting the configuration and finshing installing..."
         dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb"
+        systemctl daemon-reload
+        systemctl enable wazuh-agent
         /var/ossec/bin/agent-auth -m $wazuhManager -A $wazuhAgentName -G $wazuhAgentGroup -i
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
@@ -85,6 +87,8 @@ function installPackageRPM()
 
         echo "Setting the configuration and finshing installing..."
         rpm -ihv wazuh-agent-4.11.2-1.x86_64.rpm
+        systemctl daemon-reload
+        systemctl enable wazuh-agent
         /var/ossec/bin/agent-auth -m $wazuhManager -A $wazuhAgentName -G $wazuhAgentGroup -i
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
@@ -135,7 +139,7 @@ function startWazuhAgentService()
 {
     systemctl daemon-reload
     systemctl enable wazuh-agent
-    systemctl start wazuh-agent
+    /var/ossec/bin/agent-auth -m $wazuhManager -A $wazuhAgentName -G $wazuhAgentGroup -i
 }
 
 function showHelp()
