@@ -135,13 +135,6 @@ function installWazuhAgent()
     fi
 }
 
-function startWazuhAgentService()
-{
-    systemctl daemon-reload
-    systemctl enable wazuh-agent
-    /var/ossec/bin/agent-auth -m $wazuhManager -A $wazuhAgentName -G $wazuhAgentGroup -i
-}
-
 function showHelp()
 {
     echo -e "\
@@ -162,16 +155,12 @@ function main()
 {
     if [ -n "$SUDO_USER" ] || [ "$USER" = "root" ]; then
         case $1 in
-            install)
+            deploy)
                 installWazuhAgent;;
             uninstall)
                 dpkg --purge wazuh-agent;;
-            start)
-                startWazuhAgentService;;
             stop)
                 systemctl stop wazuh-agent;;
-            restart)
-                systemctl restart wazuh-agent;;
             status)
                 systemctl status wazuh-agent;;
             *)
