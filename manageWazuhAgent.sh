@@ -126,14 +126,16 @@ function startWazuhAgentService()
 
 function showHelp()
 {
-    echo -e "\
+        echo -e "\
 This is a usage to explain how $1 is executed\n\n\
-\t[-] $1 install -> Get the Wazuh-Agent package and install it with the parameters readed from stdin\n
-\t[-] $1 uninstall -> Uninstall the Wazuh-Agent package\n
-\t[-] $1 start -> Start Wazuh-Agent service\n
-\t[-] $1 stop -> Stop Wazuh-Agent service\n
-\t[-] $1 status -> Get the Wazuh-Agent service status
-\t[-] $1 help -> Show this usage, no require sudo or root\n"
+\tinstall -> Get the Wazuh-Agent package and install it with the parameters readed from stdin
+\tuninstall -> Uninstall the Wazuh-Agent package
+\tstart -> Start Wazuh-Agent service
+\tstop -> Stop Wazuh-Agent service
+\tstatus -> Get the Wazuh-Agent service status
+\thelp -> Show this usage, no require sudo or root
+
+Use $1 <option> with sudo or root user"
 }
 
 function main()
