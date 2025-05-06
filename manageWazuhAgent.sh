@@ -32,16 +32,21 @@ function installPackageDPKG()
     wget -q "https://packages.wazuh.com/$rootVersion.x/apt/pool/main/w/wazuh-agent/wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" 2>/dev/null
 
     if [ $? -eq 0 ] && [ -e "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" ]; then
+
         echo "Installing Wazuh Agent package..."
+
         echo "Set the server address, enter an IP address or a FQDN"
         while [ -z $wazuhManager  ]; do
             read -p "-> " wazuhManager
         done
-        echo "Set Agent's Name, "
-            read -p "-> " wazuhAgentGroup
-        echo "Set Agent's group/s, is there more than one group use <group1,group2,...> format"
+
+        echo "[Optional] Set Agent's Name, if not set takes hostname"
         read -p "-> " wazuhAgentGroup
-        sudo WAZUH_MANAGER=$wazuhManager WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb"
+
+        echo "[Optional] Set Agent's group/s, is there more than one group use <group1,group2,...> format"
+        read -p "-> " wazuhAgentGroup
+
+        WAZUH_MANAGER="$wazuhManager" WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb"
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
         fi
@@ -114,16 +119,23 @@ function installWazuhAgent()
 
 function startWazuhAgentService()
 {
-    sudo systemctl daemon-reload
-    sudo systemctl enable wazuh-agent
-    sudo systemctl start wazuh-agent
+    systemctl daemon-reload
+    systemctl enable wazuh-agent
+    systemctl start wazuh-agent
 }
 
 function showHelp()
 {
     echo -e "\
 This is a usage to explain how $1 is executed\n\n\
-\t$1 install -> Get the Wazuh-Agent package and install it with the parameters readed from stdin"
+\t[-] $1 install -> Get the Wazuh-Agent package and install it with the parameters readed from stdin\n
+\t[-] $1 uninstall -> Uninstall the Wazuh-Agent package\n
+\t[-] $1 start -> Start Wazuh-Agent service\n
+\t[-] $1 stop -> Stop Wazuh-Agent service\n
+\t[-] $1 status -> Get the Wazuh-Agent service status
+\t[-] $1 help -> Show this usage, no require sudo or root\n"
+
+
 }
 
 function main()
@@ -133,15 +145,15 @@ function main()
             install)
                 installWazuhAgent;;
             uninstall)
-                sudo dpkg --purge wazuh-agent;;
+                dpkg --purge wazuh-agent;;
             start)
                 startWazuhAgentService;;
             stop)
-                sudo systemctl stop wazuh-agent;;
+                systemctl stop wazuh-agent;;
             restart)
-                sudo systemctl restart wazuh-agent;;
+                systemctl restart wazuh-agent;;
             status)
-                sudo systemctl status wazuh-agent;;
+                systemctl status wazuh-agent;;
             *)
                 echo "ERROR: Not a valid option execute $0 help to show a usage"
             ;;
