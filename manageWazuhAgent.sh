@@ -47,10 +47,10 @@ function installPackageDPKG()
         read -p "-> " wazuhAgentGroup
 
         echo "Setting the configuration and finshing installing..."
-        dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb"
-        systemctl daemon-reload
-        systemctl enable wazuh-agent
-        /var/ossec/bin/agent-auth -m $wazuhManager -A $wazuhAgentName -G $wazuhAgentGroup -i
+        export WAZUH_MANAGER=$wazuhManager 
+        export WAZUH_AGENT_GROUP=$wazuhAgentGroup
+        export WAZUH_AGENT_NAME=$wazuhAgentName
+        dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" 
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
             exit 1
@@ -86,10 +86,10 @@ function installPackageRPM()
         read -p "-> " wazuhAgentGroup
 
         echo "Setting the configuration and finshing installing..."
+        export WAZUH_MANAGER=$wazuhManager 
+        export WAZUH_AGENT_GROUP=$wazuhAgentGroup
+        export WAZUH_AGENT_NAME=$wazuhAgentName
         rpm -ihv wazuh-agent-4.11.2-1.x86_64.rpm
-        systemctl daemon-reload
-        systemctl enable wazuh-agent
-        /var/ossec/bin/agent-auth -m $wazuhManager -A $wazuhAgentName -G $wazuhAgentGroup -i
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
             exit 1
@@ -147,20 +147,29 @@ This is a usage to explain how $1 is executed\n\n\
 \thelp -> Show this usage, no require sudo or root
 
 Use $1 <option> with sudo or root user"
+}
 
-
+function startWazuhAgentService()
+{
+    systemctl daemon-reload
+    systemctl enable wazuh-agent
+    systemctl start wazuh-agent
 }
 
 function main()
 {
     if [ -n "$SUDO_USER" ] || [ "$USER" = "root" ]; then
         case $1 in
-            deploy)
+            install)
                 installWazuhAgent;;
             uninstall)
                 dpkg --purge wazuh-agent;;
+            start)
+                startWazuhAgentService;;
             stop)
                 systemctl stop wazuh-agent;;
+            restart)
+                systemctl restart wazuh-agent;;
             status)
                 systemctl status wazuh-agent;;
             *)
