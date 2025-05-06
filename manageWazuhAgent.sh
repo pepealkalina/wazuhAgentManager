@@ -35,7 +35,7 @@ function installPackageDPKG()
 
         echo "Installing Wazuh Agent package..."
 
-        echo "Set the server address, enter an IP address or a FQDN"
+        echo "[Mandatory] Set the server address, enter an IP address or a FQDN"
         while [ -z $wazuhManager  ]; do
             read -p "-> " wazuhManager
         done
@@ -46,7 +46,8 @@ function installPackageDPKG()
         echo "[Optional] Set Agent's group/s, is there more than one group use <group1,group2,...> format"
         read -p "-> " wazuhAgentGroup
 
-        WAZUH_MANAGER="$wazuhManager" WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb"
+        echo "Setting the configuration and finshing installing..."
+        WAZUH_MANAGER="$wazuhManager" WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" 
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
         fi
@@ -68,11 +69,20 @@ function installPackageRPM()
 
     if [ $? -eq 0 ] && [ -e "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" ]; then
         echo "Installing Wazuh Agent package..."
-        echo "Set the server address, the agent use it to communicate with the server, enter an IP address or a fully qualified domain name (FQDN)"
+
+        echo "[Mandatory] Set the server address, enter an IP address or a FQDN"
         while [ -z $wazuhManager  ]; do
             read -p "-> " wazuhManager
         done
-        #sudo WAZUH_MANAGER=$wazuhManager WAZUH_AGENT_GROUP=$wazuhAgentGroup WAZUH_AGENT_NAME=$wazuhAgentName rpm -ihv wazuh-agent-4.11.2-1.x86_64.rpm
+
+        echo "[Optional] Set Agent's Name, if not set takes hostname"
+        read -p "-> " wazuhAgentGroup
+
+        echo "[Optional] Set Agent's group/s, is there more than one group use <group1,group2,...> format"
+        read -p "-> " wazuhAgentGroup
+
+        echo "Setting the configuration and finshing installing..."
+        WAZUH_MANAGER="$wazuhManager" WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" rpm -ihv wazuh-agent-4.11.2-1.x86_64.rpm
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
         fi
@@ -126,7 +136,7 @@ function startWazuhAgentService()
 
 function showHelp()
 {
-        echo -e "\
+    echo -e "\
 This is a usage to explain how $1 is executed\n\n\
 \tinstall -> Get the Wazuh-Agent package and install it with the parameters readed from stdin
 \tuninstall -> Uninstall the Wazuh-Agent package
@@ -136,6 +146,8 @@ This is a usage to explain how $1 is executed\n\n\
 \thelp -> Show this usage, no require sudo or root
 
 Use $1 <option> with sudo or root user"
+
+
 }
 
 function main()
