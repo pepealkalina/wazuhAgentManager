@@ -134,8 +134,6 @@ This is a usage to explain how $1 is executed\n\n\
 \t[-] $1 stop -> Stop Wazuh-Agent service\n
 \t[-] $1 status -> Get the Wazuh-Agent service status
 \t[-] $1 help -> Show this usage, no require sudo or root\n"
-
-
 }
 
 function main()
