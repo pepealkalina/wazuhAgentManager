@@ -41,16 +41,15 @@ function installPackageDPKG()
         done
 
         echo "[Optional] Set Agent's Name, if not set takes hostname"
-        read -p "-> " wazuhAgentGroup
+        read -p "-> " wazuhAgentName
 
         echo "[Optional] Set Agent's group/s, is there more than one group use <group1,group2,...> format"
         read -p "-> " wazuhAgentGroup
 
         echo "Setting the configuration and finshing installing..."
-        echo $wazuhAgentName
         export WAZUH_MANAGER=$wazuhManager 
         export WAZUH_AGENT_GROUP=$wazuhAgentGroup
-        export WAZUH_AGENT_NAME=$wazuhAgentName 
+        export WAZUH_AGENT_NAME=$wazuhAgentName
         dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" 1>/dev/null
         if [ $? -ne 0 ]; then
             unset WAZUH_MANAGER
@@ -84,7 +83,7 @@ function installPackageRPM()
         done
 
         echo "[Optional] Set Agent's Name, if not set takes hostname"
-        read -p "-> " wazuhAgentGroup
+        read -p "-> " wazuhAgentName
 
         echo "[Optional] Set Agent's group/s, is there more than one group use <group1,group2,...> format"
         read -p "-> " wazuhAgentGroup
