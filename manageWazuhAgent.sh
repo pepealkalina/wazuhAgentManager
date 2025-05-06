@@ -47,7 +47,7 @@ function installPackageDPKG()
         read -p "-> " wazuhAgentGroup
 
         echo "Setting the configuration and finshing installing..."
-        WAZUH_MANAGER="$wazuhManager" WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" 
+        sudo WAZUH_MANAGER=$wazuhManager WAZUH_AGENT_GROUP=$wazuhAgentGroup WAZUH_AGENT_NAME=$wazuhAgentName dpkg -i "./wazuh-agent_$wazuhServerVersion-1_$systemArch.deb" 1>/dev/null
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
         fi
@@ -82,7 +82,7 @@ function installPackageRPM()
         read -p "-> " wazuhAgentGroup
 
         echo "Setting the configuration and finshing installing..."
-        WAZUH_MANAGER="$wazuhManager" WAZUH_AGENT_GROUP="$wazuhAgentGroup" WAZUH_AGENT_NAME="$wazuhAgentName" rpm -ihv wazuh-agent-4.11.2-1.x86_64.rpm
+        sudo WAZUH_MANAGER=$wazuhManager WAZUH_AGENT_GROUP=$wazuhAgentGroup WAZUH_AGENT_NAME=$wazuhAgentName rpm -ihv wazuh-agent-4.11.2-1.x86_64.rpm 1>/dev/null
         if [ $? -ne 0 ]; then
             echo "ERROR: Could not install the package, check the package name"
         fi
