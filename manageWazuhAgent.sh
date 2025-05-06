@@ -47,6 +47,7 @@ function installPackageDPKG()
         read -p "-> " wazuhAgentGroup
 
         echo "Setting the configuration and finshing installing..."
+        echo $wazuhAgentName
         export WAZUH_MANAGER=$wazuhManager 
         export WAZUH_AGENT_GROUP=$wazuhAgentGroup
         export WAZUH_AGENT_NAME=$wazuhAgentName 
